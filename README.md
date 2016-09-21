@@ -12,6 +12,7 @@ export async function navigatingTo(args) {
 }
 ```
 Populating up our list:
+
 ![Issues List](IssuesList.png)
 
 Async/await down compiling to ES5 was recently merged in the TypeScript master,
