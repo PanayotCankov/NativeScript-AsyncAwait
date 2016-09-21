@@ -3,8 +3,12 @@ Use async/await with TypeScript in {N} today
 
 (Sept 2016)
 
-Async/awayt down compiling to ES5 was recently merged in TypeScript master, and is now available within the TypeScript @next version. It comes with some nifty polyfils, but other than that it is pretty straight forward.
+Async/await down compiling to ES5 was recently merged in TypeScript master,
+and is now available within the TypeScript @next version.
 
+It comes with some nifty polyfils, but other than that it is pretty straight forward.
+
+### Make an app
 To use in {N} app, just make your new TypeScript enabled app:
 ```
 tns create IssuesList --template typescript
@@ -13,7 +17,10 @@ code .
 npm install typescript@next --save-dev
 ```
 
-{N} ships commonjs modules and emmiting helpers in every module is undesireable.
+### Show me the helpers
+{N} ships *commonjs* modules and emitting helpers in every module is undesirable.
+{N} also provides __extend allready, that helps extending native Objective-C and Java classes.
+
 We will generate a single file with the required helpers for async/await.
 Create an `app/helpers.ts` file with the following typescript:
 ```
@@ -43,8 +50,22 @@ import * as app from 'application';
 app.start({ moduleName: 'main-page' });
 ```
 
-Now we can make a good use of the async/await in our app.
-Lets list some github issues, in `app/main-page.xml`:
+### Ab/use
+Now we can make a good use of the async/await in our app at `app/main-page.ts`:
+``` TypeScript
+import * as http from "http";
+
+const nIssuesUrl = "https://api.github.com/repos/NativeScript/NativeScript/issues";
+
+export async function navigatingTo(args) {
+  let page = args.object.page;
+  let issues = await http.getJSON(nIssuesUrl);
+  console.log("issues: " + issues);
+  page.bindingContext = issues;
+}
+```
+
+All we have to do now is template these github issues in `app/main-page.xml`:
 ``` XML
 <Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo">
   <ListView items="{{ $value }}">
@@ -61,20 +82,7 @@ Lets list some github issues, in `app/main-page.xml`:
 </Page>
 ```
 
-And finally using the async/await in `app/main-page.ts`:
-``` TypeScript
-import * as http from "http";
-
-const nIssuesUrl = "https://api.github.com/repos/NativeScript/NativeScript/issues";
-
-export async function navigatingTo(args) {
-  let page = args.object.page;
-  let issues = await http.getJSON(nIssuesUrl);
-  console.log("issues: " + issues);
-  page.bindingContext = issues;
-}
-```
-
+### Run
 We can finally run the app:
 ```
 tns run ios
